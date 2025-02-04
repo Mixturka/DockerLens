@@ -20,7 +20,7 @@ func NewPostgresPingRepository(pool *pgxpool.Pool) *PostgresPingRepository {
 func (pr *PostgresPingRepository) Save(ctx context.Context, ping entities.Ping) error {
 	query := `INSERT INTO pings (id, ip, is_success, ping_time, time_stamp) 
 				VALUES ($1, $2, $3, $4, $5)`
-	_, err := pr.pool.Exec(ctx, query, ping.ID, ping.IP, ping.IsSuccess, ping.Time)
+	_, err := pr.pool.Exec(ctx, query, ping.ID, ping.IP, ping.IsSuccess, ping.Time, ping.CreatedAt)
 
 	if err != nil {
 		return err

@@ -58,7 +58,7 @@ func LoadConfig() (Config, error) {
 			Password: os.Getenv("POSTGRES_PASSWORD"),
 			Db:       os.Getenv("POSTGRES_DB"),
 			Port:     os.Getenv("POSTGRES_PORT"),
-			Host:     os.Getenv("POSTGRES_HOST"),
+			Host:     os.Getenv("POSTGRES_LOCAL_HOST"),
 		},
 	}, nil
 }
