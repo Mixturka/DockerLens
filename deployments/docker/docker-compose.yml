@@ -1,0 +1,36 @@
+services:
+  postgres:
+    container_name: postgres_db
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: "${POSTGRES_USER}"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+      POSTGRES_DB: "${POSTGRES_DB}"
+    volumes:
+      - postgres:/data/postgres
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER}"]
+      interval: 3s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    networks:
+      - backend_network
+  migrate:
+    image: migrate/migrate
+    networks:
+      - backend_network
+    volumes:
+      - ${POSTGRES_MIGRATIONS_PATH}:/migrations
+    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",  "up"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+volumes:
+  postgres:
+
+networks:
+  backend_network:
+    driver: bridge
