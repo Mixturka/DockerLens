@@ -49,3 +49,41 @@ func (pr *PostgresPingRepository) Remove(ctx context.Context, id string) error {
 	}
 	return nil
 }
+
+func (pr *PostgresPingRepository) GetPingsCursor(ctx context.Context, limit int, cursor string) ([]entities.Ping, string, error) {
+	query := `SELECT id, ip, is_success, ping_time, time_stamp 
+	          FROM pings `
+	args := []interface{}{}
+
+	if cursor != "" {
+		query += "WHERE time_stamp < $1 "
+		args = append(args, cursor)
+	}
+
+	query += "ORDER BY time_stamp DESC LIMIT $2"
+	args = append(args, limit)
+
+	rows, err := pr.pool.Query(ctx, query, args...)
+	if err != nil {
+		return nil, "", err
+	}
+	defer rows.Close()
+
+	var pings []entities.Ping
+	var nextCursor string
+
+	for rows.Next() {
+		var ping entities.Ping
+		err := rows.Scan(&ping.ID, &ping.IP, &ping.IsSuccess, &ping.Time, &ping.CreatedAt)
+		if err != nil {
+			return nil, "", err
+		}
+		pings = append(pings, ping)
+	}
+
+	if len(pings) > 0 {
+		nextCursor = pings[len(pings)-1].CreatedAt.Format("2006-01-02T15:04:05")
+	}
+
+	return pings, nextCursor, nil
+}

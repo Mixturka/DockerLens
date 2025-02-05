@@ -4,9 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"os"
-	"path/filepath"
 
-	"github.com/Mixturka/vm-hub/pkg/putils"
 	"github.com/joho/godotenv"
 )
 
@@ -26,7 +24,7 @@ type PostgresConfig struct {
 
 func LoadConfig() (Config, error) {
 	if err := godotenv.Load(); err != nil {
-		return Config{}, fmt.Errorf("failed to load config from .env: %s", err)
+		return Config{}, fmt.Errorf("failed to load config from environment: %s", err)
 	}
 
 	listenAddr := os.Getenv("LISTEN_ADDR")
@@ -37,17 +35,6 @@ func LoadConfig() (Config, error) {
 	logLevel := os.Getenv("LOG_LEVEL")
 	if logLevel == "" {
 		logLevel = "local"
-	}
-	cwd, err := os.Getwd()
-	if err != nil {
-		return Config{}, fmt.Errorf("failed to determine current working directory: %s", err)
-	}
-	projRoot, err := putils.GetProjectRoot(cwd)
-	if err != nil {
-		return Config{}, fmt.Errorf("failed to load postgres config from database.env: %s", err)
-	}
-	if err := godotenv.Load(filepath.Join(projRoot, "deployments/env/database.env")); err != nil {
-		return Config{}, fmt.Errorf("failed to load postgres config from database.env: %s", err)
 	}
 
 	return Config{

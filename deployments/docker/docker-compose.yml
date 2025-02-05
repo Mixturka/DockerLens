@@ -24,10 +24,28 @@ services:
       - backend_network
     volumes:
       - ${POSTGRES_MIGRATIONS_PATH}:/migrations
-    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",  "up"]
+    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DOCKER_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",  "up"]
     depends_on:
       postgres:
         condition: service_healthy
+
+  backend:
+    build:
+      context: ../../backend
+      dockerfile: deployments/docker/Dockerfile
+    container_name: dockerlens_backend
+    env_file:
+      - ../../backend/.env
+      - ../../database/postgres/.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    links:
+      - postgres
+
+
 volumes:
   postgres:
 

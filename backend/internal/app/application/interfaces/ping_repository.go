@@ -9,5 +9,6 @@ import (
 type PingRepository interface {
 	Save(ctx context.Context, ping entities.Ping) error
 	GetById(ctx context.Context, id string) (entities.Ping, error)
+	GetPingsCursor(ctx context.Context, limit int, cursor string) ([]entities.Ping, string, error)
 	Remove(ctx context.Context, id string) error
 }

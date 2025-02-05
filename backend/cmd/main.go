@@ -9,6 +9,7 @@ import (
 	"github.com/Mixturka/DockerLens/backend/internal/app/config"
 	"github.com/Mixturka/DockerLens/backend/internal/app/infrastructure/database/postgres"
 	server "github.com/Mixturka/DockerLens/backend/internal/app/infrastructure/httpserver"
+	"github.com/Mixturka/DockerLens/backend/internal/app/infrastructure/httpserver/handlers/url/get"
 	"github.com/Mixturka/DockerLens/backend/internal/app/infrastructure/httpserver/handlers/url/save"
 	"github.com/Mixturka/DockerLens/backend/internal/pkg/logging"
 	"github.com/Mixturka/DockerLens/backend/pkg/dbutils"
@@ -21,7 +22,6 @@ func main() {
 	config, err := config.LoadConfig()
 	if err != nil {
 		log.Fatal(err)
-		os.Exit(1)
 	}
 
 	log := logging.SetupLogger(config.LogLevel)
@@ -47,6 +47,7 @@ func main() {
 	router.Use(middleware.URLFormat)
 	router.Use(middleware.Logger)
 	router.Post("/api/v1/pings", save.NewSaveHandler(log, pingRepo))
+	router.Get("/api/v1/pings", get.NewGetHandler(log, pingRepo))
 
 	server := server.NewServer(router)
 	if err := server.Start(log, config); err != nil {
