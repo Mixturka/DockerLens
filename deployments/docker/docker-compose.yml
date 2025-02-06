@@ -24,7 +24,7 @@ services:
       - backend_network
     volumes:
       - ${POSTGRES_MIGRATIONS_PATH}:/migrations
-    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_DOCKER_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",  "up"]
+    command: ["-path", "/migrations", "-database", "postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}?sslmode=disable",  "up"]
     depends_on:
       postgres:
         condition: service_healthy
@@ -40,11 +40,34 @@ services:
     ports:
       - "8080:8080"
     depends_on:
-      postgres:
-        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
     links:
       - postgres
+    networks:
+      - backend_network
+    develop:
+      watch:
+        - path: ../../backend
+          action: rebuild
 
+  pinger:
+    build:
+      context: ../../pinger
+      dockerfile: deployments/docker/Dockerfile
+    container_name: dockerlens_pinger
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    env_file:
+      - ../../pinger/.env
+    depends_on:
+      - backend
+    networks:
+      - backend_network
+    develop:
+      watch:
+        - path: ../../pinger
+          action: rebuild
 
 volumes:
   postgres:
