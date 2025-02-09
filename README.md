@@ -9,9 +9,9 @@
 **DockerLens** - monitoring tool designed to track running Docker containers by pinging them with defined intervals. It consists of three core services:
 
 ### 🏗 Services  
-- **RESTful Backend API**(Go, PostgreSQL) – Manages container data and provides endpoints for retrieving and putting information.  
-- **Pinger Service**(Go) – Continuously monitors Docker containers, tracks their status and IP addresses and stores ping information in database via backend API.
-- **React Frontend**(React + JS) – Fetches data from the backend and displays it in a table format (IP address, ping time, last successful attempt date, was ping successful) which is updated dynamically.  
+- **RESTful Backend API** (Go, PostgreSQL) – Manages container data and provides endpoints for retrieving and putting information.  
+- **Pinger Service** (Go) – Continuously monitors Docker containers, tracks their status and IP addresses and stores ping information in database via backend API.
+- **React Frontend** (React + JS) – Fetches data from the backend and displays it in a table format (IP address, ping time, last successful attempt date, was ping successful) which is updated dynamically.  
 
 ## 📋 Features
 ### 🚀 Continuous Container Monitoring  
