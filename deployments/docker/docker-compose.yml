@@ -68,6 +68,20 @@ services:
       watch:
         - path: ../../pinger
           action: rebuild
+  
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: deployments/docker/Dockerfile
+    container_name: dockerlens_frontend
+    env_file:
+      - ../../frontend/.env
+    depends_on:
+      - pinger
+    networks:
+      - backend_network
+    ports:
+      - "3000:3000"
 
 volumes:
   postgres:
