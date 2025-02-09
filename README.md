@@ -46,7 +46,7 @@ cp pinger/.env.example pinger/.env
 
 cp database/postgres/.env.example database/postgres/.env
 ```
-Next add the absolute POSTGRES_MIGRATIONS_PATH in `database/postgres/.env` file before starting the application!
+Next add the absolute POSTGRES_MIGRATIONS_PATH in `database/postgres/.env` file before starting the application! (They are in database/postgres/migrations folder)
 > 📘 **Info:** On windows WSL usage is prefered
 
 ### 🐳 Step 3: Build and Start Dockerized Services
