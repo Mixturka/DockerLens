@@ -44,13 +44,13 @@ cp frontend/.env.example frontend/.env
 
 cp pinger/.env.example pinger/.env
 
-cp database/.env.example database/.env
+cp database/postgres/.env.example database/postgres/.env
 ```
 > ⚠️ **Warning:** Make sure you add the absolute POSTGRES_MIGRATIONS_PATH in `database/postgres/.env` file before starting the application!
 
 ### 🐳 Step 3: Build and Start Dockerized Services
 ```sh
-sudo docker compose -f deployments/docker/docker-compose.yml --env-file=database/.env up
+sudo docker compose -f deployments/docker/docker-compose.yml --env-file=database/postgres/.env up
 ```
 
 ### 🌐 Step 4: Use Application
