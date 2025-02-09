@@ -26,7 +26,7 @@
 Before you begin, make sure you have the following installed:  
 
 - [Docker](https://docs.docker.com/get-docker/)
-- [Golang](https://go.dev/dl/)
+- [Golang](https://go.dev/dl/) (for backend development)
 - [Docker Compose](https://docs.docker.com/compose/install/)  
 - [Node.js](https://nodejs.org/) (for frontend development)  
 
@@ -47,6 +47,8 @@ cp pinger/.env.example pinger/.env
 cp database/postgres/.env.example database/postgres/.env
 ```
 > ⚠️ **Warning:** Make sure you add the absolute POSTGRES_MIGRATIONS_PATH in `database/postgres/.env` file before starting the application!
+
+> 📘 **Info:** On windows WSL usage is prefered
 
 ### 🐳 Step 3: Build and Start Dockerized Services
 ```sh
