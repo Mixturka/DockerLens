@@ -73,23 +73,23 @@ func (dc *DockerClient) MonitorContainers(ctx context.Context, log *slog.Logger)
 				case "start", "create":
 					ip, err := dc.getContainerIp(msg.Actor.ID)
 					if err != nil {
-						// TODO: log
+						log.Error("Failed to get started or created container IP", slog.Any("error", err.Error()))
 						break
 					}
 					err = dc.ipStore.Add(ip)
 					if err != nil {
-						// TODO: log
+						log.Error("Failed to add ip to ip storage", slog.Any("error", err.Error()))
 					}
 				case "stop", "die":
 					err := dc.ipStore.Remove(msg.Actor.ID)
 					if err != nil {
-						// TODO: log
+						log.Error("Failed to remove stopped/died container IP from ip storage", slog.Any("error", err.Error()))
 					}
 				}
 			}
 		case err := <-errs:
 			if err != nil {
-				// TODO log
+				log.Error("Failed to fetch container", slog.Any("error", err.Error()))
 				return
 			}
 		case <-ctx.Done():

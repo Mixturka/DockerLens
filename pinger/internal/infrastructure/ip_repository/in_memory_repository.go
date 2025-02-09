@@ -32,7 +32,7 @@ func (r *InMemoryIpRepository) Remove(ip string) error {
 
 func (r *InMemoryIpRepository) GetAll() ([]string, error) {
 	var ips []string
-	r.pingResults.Range(func(key, value interface{}) bool {
+	r.pingResults.Range(func(key, value any) bool {
 		ips = append(ips, key.(string))
 		return true
 	})
