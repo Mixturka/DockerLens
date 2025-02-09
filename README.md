@@ -46,6 +46,7 @@ cp pinger/.env.example pinger/.env
 
 cp database/.env.example database/.env
 ```
+> ⚠️ **Warning:** Make sure you add the absolute POSTGRES_MIGRATIONS_PATH in `database/postgres/.env` file before starting the application!
 
 ### 🐳 Step 3: Build and Start Dockerized Services
 ```sh
