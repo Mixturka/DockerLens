@@ -13,7 +13,6 @@ import (
 	"github.com/Mixturka/DockerLens/backend/internal/app/infrastructure/httpserver/response"
 	"github.com/go-chi/render"
 	"github.com/go-playground/validator/v10"
-	"github.com/google/uuid"
 )
 
 func NewSaveHandler(log *slog.Logger, repo interfaces.PingRepository) http.HandlerFunc {
@@ -32,6 +31,7 @@ func NewSaveHandler(log *slog.Logger, repo interfaces.PingRepository) http.Handl
 		validate := validator.New()
 		for _, ping := range req {
 			if err := validate.Struct(ping); err != nil {
+				log.Error("Validation failed", slog.String("error", err.Error()), slog.Any("ping", ping))
 				render.Status(r, http.StatusNotAcceptable)
 				render.JSON(w, r, response.Err("request validation failed"))
 				return
@@ -44,11 +44,10 @@ func NewSaveHandler(log *slog.Logger, repo interfaces.PingRepository) http.Handl
 		pings := []entities.Ping{}
 		for _, ping := range req {
 			pings = append(pings, entities.Ping{
-				ID:        uuid.NewString(),
-				IP:        ping.IP,
-				IsSuccess: ping.IsSuccess,
-				Duration:  ping.Duration,
-				CreatedAt: time.Now(),
+				IP:          ping.IP,
+				IsSuccess:   ping.IsSuccess,
+				Duration:    ping.Duration,
+				LastSuccess: time.Now(),
 			})
 		}
 

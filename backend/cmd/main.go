@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	"log/slog"
 	"os"
 	"time"
 
@@ -16,6 +17,7 @@ import (
 	"github.com/Mixturka/DockerLens/backend/pkg/logging"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/go-chi/cors"
 	"github.com/jackc/pgx/v5/pgxpool"
 )
 
@@ -36,7 +38,7 @@ func main() {
 
 	dbpool, err := pgxpool.New(context.Background(), connStr)
 	if err != nil {
-		log.Error("Unable to create connection pool: ", err.Error())
+		log.Error("Unable to create connection pool, ", slog.Any("error:", err.Error()))
 		os.Exit(1)
 	}
 	defer dbpool.Close()
@@ -54,6 +56,15 @@ func main() {
 	router.Use(middleware.Recoverer)
 	router.Use(middleware.URLFormat)
 	router.Use(middleware.Logger)
+	router.Use(cors.Handler(cors.Options{
+		AllowedOrigins:   config.CorsCfg.AllowedOrigins,
+		AllowedMethods:   config.CorsCfg.AllowedMethods,
+		AllowedHeaders:   config.CorsCfg.AllowedHeaders,
+		ExposedHeaders:   config.CorsCfg.ExposedHeaders,
+		AllowCredentials: config.CorsCfg.AllowCredentials,
+		MaxAge:           config.CorsCfg.MaxAge,
+	}))
+
 	router.Post("/api/v1/pings", save.NewSaveHandler(log, pingRepo))
 	router.Get("/api/v1/pings", get.NewGetHandler(log, pingRepo))
 

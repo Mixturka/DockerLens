@@ -9,8 +9,8 @@ import (
 type PingRepository interface {
 	Save(ctx context.Context, ping entities.Ping) error
 	SaveBatch(ctx context.Context, pings []entities.Ping) error
-	GetById(ctx context.Context, id string) (entities.Ping, error)
-	GetPingsCursor(ctx context.Context, limit int, cursor string) ([]entities.Ping, string, error)
-	Remove(ctx context.Context, id string) error
+	GetAllPings(ctx context.Context) ([]entities.Ping, error)
+	GetLatestSuccessByIp(ctx context.Context, ip string) (entities.Ping, error)
+	Remove(ctx context.Context, iз string) error
 	Healthcheck(ctx context.Context) error
 }

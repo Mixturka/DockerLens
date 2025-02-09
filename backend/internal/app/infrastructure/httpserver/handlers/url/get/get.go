@@ -4,7 +4,6 @@ import (
 	"context"
 	"log/slog"
 	"net/http"
-	"strconv"
 	"time"
 
 	"github.com/Mixturka/DockerLens/backend/internal/app/application/interfaces"
@@ -17,26 +16,14 @@ func NewGetHandler(log *slog.Logger, repo interfaces.PingRepository) http.Handle
 		ctx, cancel := context.WithTimeout(context.Background(), time.Second*10)
 		defer cancel()
 
-		cursor := r.URL.Query().Get("cursor")
-		limitStr := r.URL.Query().Get("limit")
-
-		limit, err := strconv.Atoi(limitStr)
-		if err != nil || limit <= 0 {
-			limit = 30
-		}
-
-		pings, nextCursor, err := repo.GetPingsCursor(ctx, limit, cursor)
+		pings, err := repo.GetAllPings(ctx)
 		if err != nil {
+			log.Error("Failed GET request ", slog.Any("error", err.Error()))
 			render.Status(r, http.StatusInternalServerError)
 			render.JSON(w, r, response.Err("Data access failure"))
 			return
 		}
 
-		resp := map[string]interface{}{
-			"data":        pings,
-			"next_cursor": nextCursor,
-		}
-
-		render.JSON(w, r, resp)
+		render.JSON(w, r, map[string]any{"pings": pings})
 	}
 }
