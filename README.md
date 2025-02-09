@@ -42,7 +42,7 @@ cp backend/.env.example backend/.env
 
 cp frontend/.env.example frontend/.env
 
-cp pinger/.env.example pinger.env
+cp pinger/.env.example pinger/.env
 
 cp database/.env.example database/.env
 ```
