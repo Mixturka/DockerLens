@@ -35,7 +35,6 @@ export default function PingTable() {
         return a.IP.localeCompare(b.IP);
     });
 
-
     if (error) {
         return (
             <div className="alert alert-danger" role="alert">
@@ -64,7 +63,7 @@ export default function PingTable() {
                             <td>{ping.IP}</td>
                             <td>{ping.Duration}</td>
                             <td>{new Date(ping.LastSuccess).toLocaleString()}</td>
-                            <td class={ping.IsSuccess ? "table-success" : "table-danger"}>
+                            <td className={ping.IsSuccess ? "table-success" : "table-danger"}>
                                 {ping.IsSuccess ? `Success` : `Failure`}
                             </td>
                         </tr>
