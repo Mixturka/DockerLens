@@ -78,7 +78,7 @@ func (ps *PingerService) PingAll(log *slog.Logger) []entities.PingResult {
 
 	ips, err := ps.containerClient.GetContainerIPs()
 	if err != nil {
-		log.Error("Failed to get container IPs: ", slog.Any("error", err))
+		log.Error("Failed to get container IPs: ", slog.Any("error", err.Error()))
 		return []entities.PingResult{}
 	}
 	for _, ip := range ips {

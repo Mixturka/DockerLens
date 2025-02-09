@@ -3,7 +3,6 @@ package config
 import (
 	"fmt"
 	"os"
-	"strconv"
 	"time"
 
 	"github.com/joho/godotenv"
@@ -23,16 +22,16 @@ func LoadConfig() (Config, error) {
 		logLevel = "local"
 	}
 
-	containerFetchIntervalStr := os.Getenv("CONTAINER_FETCH_INTERVAL")
+	containerFetchIntervalStr := os.Getenv("CONTAINER_FETCH_INTERVAL_MS")
 	if containerFetchIntervalStr == "" {
-		containerFetchIntervalStr = "30000"
+		containerFetchIntervalStr = "3000ms"
 	}
-	containerFetchInterval, err := strconv.ParseInt(containerFetchIntervalStr, 10, 64)
+	containerFetchInterval, err := time.ParseDuration(containerFetchIntervalStr)
 	if err != nil {
 		return Config{}, fmt.Errorf("failed to parse container interval from environment: %s", err)
 	}
 	return Config{
 		LogLevel:               logLevel,
-		ContainerFetchInterval: time.Duration(containerFetchInterval),
+		ContainerFetchInterval: containerFetchInterval,
 	}, nil
 }

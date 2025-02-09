@@ -26,7 +26,7 @@ func NewSaveHandler(log *slog.Logger, repo interfaces.PingRepository) http.Handl
 			return
 		}
 
-		log.Info("request body decoded successfully", slog.Any("request", req))
+		log.Debug("request body decoded successfully", slog.Any("request", req))
 
 		validate := validator.New()
 		for _, ping := range req {
