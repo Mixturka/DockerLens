@@ -1,7 +1,6 @@
 CREATE TABLE IF NOT EXISTS pings (
-    id UUID PRIMARY KEY NOT NULL,
-    ip INET NOT NULL,
+    ip INET UNIQUE PRIMARY KEY NOT NULL,
     is_success BOOLEAN NOT NULL,
     ping_time BIGINT NOT NULL,
-    time_stamp TIMESTAMP NOT NULL 
+    time_stamp TIMESTAMP
 )
